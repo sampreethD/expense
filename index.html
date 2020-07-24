@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense App</title>
+</head>
+
+<body>
+    <h1 id="totalExpenseHeader"></h1>
+    <input id="amount" placeholder="Amount spent" type="text" />
+    <input id="description" placeholder="Spent on" type="text" />
+    <button type="button" id="btnExpense">Add Expense</button>
+    <div id="individualExpense"></div>
+    <script>
+        //reference for amount spent element
+        const amountSpent = document.querySelector('#amount')
+        //reference for description element
+        const desc = document.querySelector('#description')
+        //reference for button element
+        const buttonEl = document.querySelector('#btnExpense')
+        //reference for Total Expense Heading
+        const totalExpenseHeader = document.querySelector('#totalExpenseHeader')
+        //reference for div to display individual expenses
+        const individualExp = document.querySelector('#individualExpense')
+
+
+        //totalExpense initialization
+        let totalExpense = 0;
+
+        //array of expenses
+        let allExpenses = []
+        //calculateTotalExp function to calculate total expense
+        function calculateTotalExp() {
+            let amount = parseInt(amountSpent.value)
+            let description = desc.value
+            totalExpense += amount;
+            totalExpenseHeader.textContent = totalExpense;
+            allExpenses.push({ amount, description })
+            allExpenses.map(expense => {
+                individualExpense.innerHTML = `${expense.amount} :: ${expense.description}`
+            })
+
+        }
+
+
+
+        //addEventListener for button with event click
+        buttonEl.addEventListener('click', calculateTotalExp, false)
+
+    </script>
+</body>
+
+</html>
