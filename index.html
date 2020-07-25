@@ -79,8 +79,6 @@
         }
 
 
-        // let allExpenses = JSON.parse(localStorage.getItem('expense')) || []
-        // console.log(allExpenses)
         //calculateTotalExp function to calculate total expense
         function calculateTotalExp() {
             let amount = parseInt(amountSpent.value, 10)
@@ -88,10 +86,15 @@
             totalExpense += amount;
             let added_date = new Date();
             // totalExpenseHeader.textContent = totalExpense;
-
-            //push individual expense to allexpense array to store at one place
-            allExpenses.push({ amount, description, added_date })
-            getExpenseList(allExpenses)
+            let regex = /^\S/
+            let result = regex.test(description)
+            if (result) {
+                //push individual expense to allexpense array to store at one place
+                allExpenses.push({ amount, description, added_date })
+                amountSpent.value = undefined;
+                desc.value = ''
+                getExpenseList(allExpenses)
+            }
 
         }
 
