@@ -64,6 +64,7 @@
 
         //totalExpense initialization
         let totalExpense = parseInt(localStorage.getItem('totalExpense')) || 0;
+        // console.log(totalExpense)
 
         //array of expenses
         let oldExpense = []
@@ -102,6 +103,7 @@
             //setting local storage to store array on browser storage
             localStorage.setItem('expense', JSON.stringify(arr));
             localStorage.setItem('totalExpense', totalExpense)
+            // console.log(totalExpense)
 
             //iterate and create array of html elements
             //Note map will return array back
@@ -130,9 +132,10 @@
         }
 
         //delete expense
-        function deleteExpense(addedTime) {
-            let newArr = allExpenses.filter((expense) => expense['added_date'].valueOf() != addedTime)
-            allExpenses = newArr
+        function deleteExpense(addedTime,amount) {
+            let newArr = allExpenses.filter((expense) =>expense['added_date'].valueOf() != addedTime)
+            allExpenses = newArr;
+            totalExpense -= amount
             getExpenseList(allExpenses)
         }
 
@@ -151,7 +154,7 @@
 								<button 
                                     type="button" 
                                     class="btn btn-outline-danger btn-sm"
-                                    onclick="deleteExpense(${added_date.valueOf()})"
+                                    onclick="deleteExpense(${added_date.valueOf()},${amount})"
                                     >
 									<i class="fas fa-trash-alt"></i>
 								</button>
