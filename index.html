@@ -5,14 +5,50 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Expense App</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
+    <script defer src="https://use.fontawesome.com/releases/v5.7.2/js/all.js"
+        integrity="sha384-0pzryjIRos8mFBWMzSSZApWtPl/5++eIfzYmTgBBmXYdhvxPc+XcFEk+zJwDgWbP"
+        crossorigin="anonymous"></script>
 </head>
 
 <body>
-    <h1 id="totalExpenseHeader"></h1>
-    <input id="amount" placeholder="Amount spent" type="text" />
-    <input id="description" placeholder="Spent on" type="text" />
-    <button type="button" id="btnExpense">Add Expense</button>
-    <div id="individualExpense"></div>
+
+    <nav class="navbar navbar-dark bg-dark">
+        <span class="navbar-brand mb-0 h1">Expense App</span>
+        <span class="navbar-brand mb-0 h1" id="headingTotal"></span>
+    </nav>
+    <div class="container-fluid bg-light" style="min-height: 100vh">
+        <div class="container-fluid bg-light" style="min-height: 100vh">
+            <div class="jumbotron mt-4">
+                <div class="input-group mb-3">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" id="amount" placeholder="Amount spent"
+                            aria-label="Amount spent" aria-describedby="spent in rupee" />
+                        <div class="input-group-append">
+                            <span class="input-group-text" id="spent in rupee">₹</span>
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="spent at">@</span>
+                        </div>
+                        <input type="text" class="form-control" id="description" placeholder="spent On"
+                            aria-label="spent On" aria-describedby="spent at" />
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-primary" type="button" id="btnExpense">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <ul class="list-group" id="individualExpense"></ul>
+            </div>
+        </div>
+    </div>
+
+    </div>
     <script>
         //reference for amount spent element
         const amountSpent = document.querySelector('#amount')
@@ -33,21 +69,75 @@
         let allExpenses = []
         //calculateTotalExp function to calculate total expense
         function calculateTotalExp() {
-            let amount = parseInt(amountSpent.value)
+            let amount = parseInt(amountSpent.value, 10)
             let description = desc.value
             totalExpense += amount;
-            totalExpenseHeader.textContent = totalExpense;
-            allExpenses.push({ amount, description })
-            allExpenses.map(expense => {
-                individualExpense.innerHTML = `${expense.amount} :: ${expense.description}`
-            })
+            let added_date = new Date();
+            // totalExpenseHeader.textContent = totalExpense;
+
+            //push individual expense to allexpense array to store at one place
+            allExpenses.push({ amount, description, added_date })
+            getExpenseList(allExpenses)
 
         }
 
+        function getExpenseList(arr) {
+            //iterate and create array of html elements
+            //Note map will return array back
+            localStorage.setItem('expense', JSON.stringify(arr));
+            const joinedExpenses = arr.map((expense) =>
+                createListItem(expense))
+            //join() will return string by taking array of strings as input
+            const joinedAllExpenses = joinedExpenses.join('')
+            individualExp.innerHTML = joinedAllExpenses;
 
+        }
 
         //addEventListener for button with event click
         buttonEl.addEventListener('click', calculateTotalExp, false)
+
+        //format date 
+        function getDateFormat(event) {
+            const options = {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            };
+            return event.toLocaleDateString('en-US', options)
+        }
+
+        //delete expense
+        function deleteExpense(addedTime) {
+            let newArr = allExpenses.filter((expense) => expense['added_date'].valueOf() != addedTime)
+            allExpenses = newArr
+            getExpenseList(allExpenses)
+        }
+
+        function createListItem({ description, amount, added_date }) {
+            return `
+                    <li class="list-group-item d-flex justify-content-between">
+							<div class="d-flex flex-column">
+								${description}
+								<small class="text-muted">${getDateFormat(added_date)}</small>
+							</div>
+							<div>
+								<span>
+									${amount}
+								</span>
+                                <div>
+								<button 
+                                    type="button" 
+                                    class="btn btn-outline-danger btn-sm"
+                                    onclick="deleteExpense(${added_date.valueOf()})"
+                                    >
+									<i class="fas fa-trash-alt"></i>
+								</button>
+							</div>
+                            </div>
+						</li>
+                    `
+        }
 
     </script>
 </body>
