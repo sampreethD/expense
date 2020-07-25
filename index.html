@@ -17,7 +17,7 @@
 
     <nav class="navbar navbar-dark bg-dark">
         <span class="navbar-brand mb-0 h1">Expense App</span>
-        <span class="navbar-brand mb-0 h1" id="headingTotal"></span>
+        <span class="navbar-brand mb-0 h1" id="totalExpenseHeader"></span>
     </nav>
     <div class="container-fluid bg-light" style="min-height: 100vh">
         <div class="container-fluid bg-light" style="min-height: 100vh">
@@ -63,7 +63,7 @@
 
 
         //totalExpense initialization
-        let totalExpense = 0;
+        let totalExpense = parseInt(localStorage.getItem('totalExpense')) || 0;
 
         //array of expenses
         let oldExpense = []
@@ -85,7 +85,6 @@
             let description = desc.value
             totalExpense += amount;
             let added_date = new Date();
-            // totalExpenseHeader.textContent = totalExpense;
             let regex = /^\S/
             let result = regex.test(description)
             if (result) {
@@ -102,6 +101,7 @@
 
             //setting local storage to store array on browser storage
             localStorage.setItem('expense', JSON.stringify(arr));
+            localStorage.setItem('totalExpense', totalExpense)
 
             //iterate and create array of html elements
             //Note map will return array back
@@ -111,6 +111,7 @@
             //join() will return string by taking array of strings as input
             const joinedAllExpenses = joinedExpenses.join('')
             individualExp.innerHTML = joinedAllExpenses;
+            totalExpenseHeader.textContent = totalExpense;
 
         }
 
