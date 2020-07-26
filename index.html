@@ -88,7 +88,8 @@
             let added_date = new Date();
             let regex = /^\S/
             let result = regex.test(description)
-            if (result) {
+            let amtRegex = /^[1-9]\d*(\.\d+)?$/
+            if (result && amount && amtRegex) {
                 //push individual expense to allexpense array to store at one place
                 allExpenses.push({ amount, description, added_date })
                 amountSpent.value = undefined;
@@ -132,8 +133,8 @@
         }
 
         //delete expense
-        function deleteExpense(addedTime,amount) {
-            let newArr = allExpenses.filter((expense) =>expense['added_date'].valueOf() != addedTime)
+        function deleteExpense(addedTime, amount) {
+            let newArr = allExpenses.filter((expense) => expense['added_date'].valueOf() != addedTime)
             allExpenses = newArr;
             totalExpense -= amount
             getExpenseList(allExpenses)
