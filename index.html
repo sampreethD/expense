@@ -40,6 +40,9 @@
                             <button class="btn btn-outline-primary" type="button" id="btnExpense">+</button>
                         </div>
                     </div>
+                    <div>
+                        <button type="button" id="reset" class="btn btn-danger">Reset All Expenses</button>
+                    </div>
                 </div>
             </div>
             <div>
@@ -60,6 +63,8 @@
         const totalExpenseHeader = document.querySelector('#totalExpenseHeader')
         //reference for div to display individual expenses
         const individualExp = document.querySelector('#individualExpense')
+        //reference for reset 
+        const reset = document.getElementById('reset')
 
 
         //totalExpense initialization
@@ -84,12 +89,12 @@
         function calculateTotalExp() {
             let amount = parseInt(amountSpent.value, 10)
             let description = desc.value
-            totalExpense += amount;
             let added_date = new Date();
             let regex = /^\S/
             let result = regex.test(description)
             let amtRegex = /^[1-9]\d*(\.\d+)?$/
             if (result && amount && amtRegex) {
+                totalExpense += amount;
                 //push individual expense to allexpense array to store at one place
                 allExpenses.push({ amount, description, added_date })
                 amountSpent.value = undefined;
@@ -117,9 +122,18 @@
             totalExpenseHeader.textContent = totalExpense;
 
         }
+        function resetAll() {
+            console.log('works')
+            localStorage.removeItem('expense');
+            localStorage.removeItem('totalExpense')
+            window.location.reload()
+        }
 
         //addEventListener for button with event click
-        buttonEl.addEventListener('click', calculateTotalExp, false)
+        buttonEl.addEventListener('click', calculateTotalExp, false);
+
+        //addEventListener for reset button with event click
+        reset.addEventListener('click', resetAll, false);
 
         //format date 
         function getDateFormat(event) {
